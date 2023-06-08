@@ -68,8 +68,24 @@ const reducer = (state, action) => {
       return { ...state, cart: action.payload, loading: false };
       break;
 
+    case "TOGGLE_AMOUNT":
+      return {
+        ...state,
+        cart: state.cart
+          .map((cartItem) => {
+            if (cartItem.id === action.payload.id) {
+              return action.payload.type === "inc"
+                ? { ...cartItem, amount: cartItem.amount + 1 }
+                : { ...cartItem, amount: cartItem.amount - 1 };
+            }
+            return cartItem;
+          })
+          .filter((cartItem) => cartItem.id !== 0),
+      };
+      break;
+
     default:
-      return state;
+      throw new Error("No Mathcing ACTION TYPE");
       break;
   }
   return state;
